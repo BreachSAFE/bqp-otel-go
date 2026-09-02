@@ -8,8 +8,10 @@
 2. [Context](#context)
 3. [Decision](#decision)
 4. [Data flow](#data-flow)
-5. [Migration](#migration)
-6. [Consequences](#consequences)
+5. [Deployment boundary](#deployment-boundary)
+6. [Repository shape](#repository-shape)
+7. [Migration](#migration)
+8. [Consequences](#consequences)
 
 ## Status
 
@@ -32,6 +34,20 @@ owns validation, central redaction, bounded persistence, batching, and export.
 Custom BQP processors or exporters require a written gap against a stock component and a real
 integration test. No Docker socket is permitted. Producer delivery is bounded and fail-open.
 
+## Repository shape
+
+```text
+sdk/                 thin Go producer SDK (typed bqp.run.v1 events)
+schema/              language-neutral contract and fixtures
+config/              sandbox Collector configuration
+otelcol-builder.yaml pinned OCB component manifest
+dist/                generated Collector binary (ignored, never hand-edited)
+```
+
+The SDK and Collector are versioned together initially but remain separate ownership
+boundaries. A future split is allowed only after a second producer proves the package
+boundary is stable.
+
 ## Data flow
 
 ```text
@@ -44,6 +60,13 @@ QuReddy / QuReddy-App / evidence-go / PDF-go / future tools
                   ▼       ▼        ▼
               file sink  debug   remote OTLP
 ```
+
+## Deployment boundary
+
+The default deployment is a separate Collector container in the same Docker stack as the
+producers. This gives simple single-stack deployment while preserving a process, network,
+volume, and release boundary. Host-local and shared-service deployments remain compatible
+through the same OTLP endpoint contract; see [`../deployment.md`](../deployment.md).
 
 ## Migration
 

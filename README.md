@@ -8,13 +8,16 @@
 2. [Architecture](#architecture)
 3. [Current status](#current-status)
 4. [Delivery plan](#delivery-plan)
-5. [Repository rules](#repository-rules)
+5. [Deployment](#deployment)
+6. [Repository rules](#repository-rules)
 
 ## Purpose
 
 `bqp-otel-go` is the BreachSAFE Quantum Platform OpenTelemetry Collector distribution.
-It is built with the pinned OpenTelemetry Collector Builder (OCB) and composes stock
-receivers, processors, and exporters before adding any BQP-specific component.
+It packages the official OpenTelemetry Collector Contrib distribution first, with a pinned
+configuration and release evidence. OCB is retained as a reproducible fallback if a real
+requirement cannot be met by the upstream binary; no BQP-specific Collector component is
+assumed.
 
 ## Architecture
 
@@ -43,6 +46,12 @@ The [0.1.0 milestone](https://github.com/BreachSAFE/bqp-otel-go/milestone/1) tra
 work in dependency order: reproducible distribution, schema fixtures, hardened sandbox,
 producer integrations, backend profiles, then real conformance and release gates. The
 issue tracker is the execution record; the ADR is the architecture record.
+
+## Deployment
+
+The default deployment is a separate `bqp-otel` container in the same Docker stack as the
+producers. Host-local and shared-service modes use the same OTLP contract and are documented
+in [`docs/deployment.md`](docs/deployment.md).
 
 ## Repository rules
 
