@@ -6,13 +6,28 @@
   "required": ["schema", "event", "component", "outcome"],
   "properties": {
     "schema": {"const": "bqp.run.v1"},
-    "event": {"type": "string", "maxLength": 128},
-    "component": {"type": "string", "maxLength": 128},
+    "event": {"$ref": "#/$defs/identity"},
+    "component": {"$ref": "#/$defs/identity"},
     "outcome": {"enum": ["ok", "error", "timeout"]},
-    "run_id": {"type": "string", "maxLength": 128},
-    "session_id": {"type": "string", "maxLength": 128},
+    "run_id": {"$ref": "#/$defs/identity"},
+    "session_id": {"$ref": "#/$defs/identity"},
     "duration_ms": {"type": ["integer", "null"], "minimum": 0},
-    "attributes": {"type": "object", "maxProperties": 32}
+    "attributes": {
+      "type": "object",
+      "maxProperties": 32,
+      "additionalProperties": {"$ref": "#/$defs/attributeValue"}
+    }
   },
-  "additionalProperties": true
+  "additionalProperties": true,
+  "$defs": {
+    "identity": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[^\\r\\n]+$"},
+    "attributeValue": {
+      "anyOf": [
+        {"type": "string", "maxLength": 512, "pattern": "^[^\\r\\n]*$"},
+        {"type": "number"},
+        {"type": "boolean"},
+        {"type": "null"}
+      ]
+    }
+  }
 }
