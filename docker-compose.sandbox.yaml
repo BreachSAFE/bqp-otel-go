@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 BreachSAFE <https://www.breachsafe.io>
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+services:
+  volume-init:
+    image: docker.io/library/alpine:3.22@sha256:14358309a308569c32bdc37e2e0e9694be33a9d99e68afb0f5ff33cc1f695dce
+    user: "0:0"
+    command: ["chown", "65532:65532", "/var/lib/bqp-otel"]
+    volumes:
+      - bqp-otel-events:/var/lib/bqp-otel
+
+  bqp-otel:
+    depends_on:
+      volume-init:
+        condition: service_completed_successfully
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: bqp-otel:dev
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "127.0.0.1:4317:4317"
+      - "127.0.0.1:4318:4318"
+      - "127.0.0.1:55679:55679"
+    volumes:
+      - bqp-otel-events:/var/lib/bqp-otel
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    restart: unless-stopped
+
+volumes:
+  bqp-otel-events:

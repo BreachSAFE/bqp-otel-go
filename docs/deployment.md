@@ -62,3 +62,18 @@ evidence-go ─┘
 - Collector persistence is through a named writable volume, never the image layer.
 - A Collector outage must not turn a scan, session, or evidence build into a product failure.
 - The Collector image is independently versioned, scanned, signed, and verified.
+
+## Hardened sandbox profile
+
+Build and run the local profile with:
+
+```sh
+docker compose -f docker-compose.sandbox.yaml up --build
+```
+
+The profile initializes the named volume with the collector's non-root UID, then binds
+receivers to loopback, drops all Linux capabilities, enables
+`no-new-privileges`, uses a read-only root filesystem, and grants write access only to
+the named `bqp-otel-events` volume. `/tmp` is an explicitly bounded memory filesystem.
+The image is built from the pinned golden-Go builder and pinned distroless runtime; the
+Compose tag is development-only until the release workflow publishes a signed digest.
