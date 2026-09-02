@@ -12,12 +12,8 @@ import (
 )
 
 func main() {
-	endpoint := "http://127.0.0.1:13133/"
-	if len(os.Args) == 2 {
-		endpoint = os.Args[1]
-	}
 	client := http.Client{Timeout: 2 * time.Second}
-	response, err := client.Get(endpoint) // #nosec G107 -- endpoint is image-local healthcheck input.
+	response, err := client.Get("http://127.0.0.1:13133/")
 	if err != nil {
 		os.Exit(1)
 	}
