@@ -31,10 +31,11 @@ The active milestone is [0.1.0 — BQP OTel Collector distribution](https://gith
 | State | Scope |
 |---|---|
 | ✅ | Repository scope, ADR, draft config, schema boundary, pinned CI contract, Go SDK foundation |
-| 🟡 | Generated collector binary, Go SDK foundation, and SDK→Collector integration gate wired |
+| ✅ | Generated collector binary, Go SDK foundation, and real SDK→Collector integration gate |
 | ⏳ | Producer integrations and backend profiles |
 | ⏳ | Real multi-process conformance, SBOM, signing, and release |
 
-The local OCB compile was attempted with the pinned image and OCB version. It reached
-dependency resolution but stopped when the disposable container filesystem exhausted its
-`/go/pkg` space; this is recorded as an environment limitation, not a passing build.
+The hosted CI gate builds the OCB distribution on the pinned cgo golden-Go image and runs a
+real SDK→collector process test. The generated collector writes an OTLP event to the pinned
+file exporter, and CI asserts the resulting artifact. Local unit and race gates do not start
+a collector; the process test is explicitly tagged `integration`.
