@@ -23,7 +23,7 @@ jobs:
   config:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/paul007ex/breachsafe-golden-go@sha256:52fe7f2d9e0bc0f2e6be77c06da81eb3f0fe735bc93a930baf78b7c1fdc8d7b5
+      image: ghcr.io/paul007ex/breachsafe-golden-go@sha256:542520836ac7f681826af610acb9fb5230e1e1b9e97ae2f2d2b744099d32f605
       options: --user 0
     steps:
       - name: Checkout
@@ -33,7 +33,8 @@ jobs:
       - name: Golden toolchain smoke test
         run: |
           go version
-          test "${CGO_ENABLED}" = 0
+          test "${CGO_ENABLED}" = 1
+          gcc --version
           govulncheck -version
           staticcheck -version
           gosec -version
