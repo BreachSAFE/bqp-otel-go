@@ -24,13 +24,20 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/paul007ex/breachsafe-golden-go@sha256:52fe7f2d9e0bc0f2e6be77c06da81eb3f0fe735bc93a930baf78b7c1fdc8d7b5
+      options: --user 0
     steps:
       - name: Checkout
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           persist-credentials: false
       - name: Golden toolchain smoke test
-        run: golden-go-doctor
+        run: |
+          go version
+          test "${CGO_ENABLED}" = 0
+          govulncheck -version
+          staticcheck -version
+          gosec -version
+          golangci-lint version
       - name: Build pinned collector distribution
         run: |
           go install go.opentelemetry.io/collector/cmd/builder@${OCB_VERSION}
