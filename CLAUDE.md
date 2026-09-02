@@ -2,6 +2,12 @@
 
 # bqp-otel-go
 
+## Contents
+
+1. [Working rules](#working-rules)
+
+## Working rules
+
 Read [`AGENTS.md`](AGENTS.md) first. This is a standalone Go consumer of the BreachSAFE
 golden toolchain image. Follow the common Go engineering, quality, CI/CD, container, and
 release skills. Keep the first Collector distribution stock-component-only unless a
