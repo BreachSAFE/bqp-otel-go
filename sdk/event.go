@@ -37,18 +37,19 @@ const (
 // Event is the language-neutral BQP envelope carried as OTel span attributes/events.
 // Attributes are copied by NewEvent and must contain only bounded, non-sensitive metadata.
 type Event struct {
-	Event      string
-	Component  string
-	Outcome    Outcome
-	RunID      string
-	SessionID  string
-	DurationMS int64
-	Attributes map[string]string
+	Schema     string            `json:"schema,omitempty"`
+	Event      string            `json:"event"`
+	Component  string            `json:"component"`
+	Outcome    Outcome           `json:"outcome"`
+	RunID      string            `json:"run_id,omitempty"`
+	SessionID  string            `json:"session_id,omitempty"`
+	DurationMS int64             `json:"duration_ms,omitempty"`
+	Attributes map[string]string `json:"attributes,omitempty"`
 }
 
 // NewEvent validates and copies an event before it crosses the telemetry boundary.
 func NewEvent(event, component string, outcome Outcome, runID, sessionID string, durationMS int64, attributes map[string]string) (Event, error) {
-	result := Event{Event: event, Component: component, Outcome: outcome, RunID: runID, SessionID: sessionID, DurationMS: durationMS, Attributes: attributes}
+	result := Event{Schema: Schema, Event: event, Component: component, Outcome: outcome, RunID: runID, SessionID: sessionID, DurationMS: durationMS, Attributes: attributes}
 	if err := result.validate(); err != nil {
 		return Event{}, err
 	}

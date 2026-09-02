@@ -10,6 +10,7 @@
 4. [Delivery plan](#delivery-plan)
 5. [Deployment](#deployment)
 6. [Repository rules](#repository-rules)
+7. [Producer CLI](#producer-cli)
 
 ## Purpose
 
@@ -57,3 +58,9 @@ in [`docs/deployment.md`](docs/deployment.md).
 
 Read [`AGENTS.md`](AGENTS.md) and [`CLAUDE.md`](CLAUDE.md) before changing this repository.
 Use the BreachSAFE golden Go image; do not copy its Dockerfile into this repository.
+
+## Producer CLI
+
+Producers that cannot link the SDK can use [`docs/producer-cli.md`](docs/producer-cli.md)
+and the `bqp-otel-event` command to send bounded `bqp.run.v1` JSONL over OTLP without
+changing their stdout findings or stderr diagnostics.
