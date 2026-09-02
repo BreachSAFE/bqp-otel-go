@@ -12,7 +12,7 @@
 
 ## Purpose
 
-The future `bqp-otel-go/sdk` package is the thin Go producer boundary for tools that need
+The `bqp-otel-go/sdk` package is the thin Go producer boundary for tools that need
 to report `bqp.run.v1` lifecycle events. It is not a second Collector and does not persist
 or interpret findings.
 
