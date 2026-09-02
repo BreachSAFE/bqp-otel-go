@@ -32,6 +32,11 @@ func TestFixturesConformToBQPEventSchema(t *testing.T) {
 	if err := compiled.Validate(invalid); err == nil {
 		t.Fatal("invalid fixture accepted")
 	}
+	var invalidNewline any
+	decodeJSON(t, "fixtures/invalid-newline-event.json", &invalidNewline)
+	if err := compiled.Validate(invalidNewline); err == nil {
+		t.Fatal("newline event fixture accepted")
+	}
 }
 
 func decodeJSON(t *testing.T, name string, target *any) {

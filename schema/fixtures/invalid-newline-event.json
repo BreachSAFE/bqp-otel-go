@@ -1,0 +1,6 @@
+{
+  "schema": "bqp.run.v1",
+  "event": "scan\nstart",
+  "component": "qureddy",
+  "outcome": "ok"
+}
