@@ -16,7 +16,9 @@ or PDF rendering.
 
 ## Boundaries
 
-- Use the official OpenTelemetry Collector Builder (OCB) and pinned stock components first.
+- Use the official OpenTelemetry Collector distribution and pinned stock components first;
+  use OCB as the reproducible fallback when the upstream binary cannot satisfy a measured
+  requirement.
 - Treat `bqp.run.v1` as a language-neutral producer contract.
 - Keep producers fail-open and bounded; collector failure must not break a scan or session.
 - Never accept raw terminal bytes, credentials, OAuth URLs, or sensitive scan payloads as
