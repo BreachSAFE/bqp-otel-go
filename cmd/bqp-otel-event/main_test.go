@@ -11,8 +11,8 @@ import (
 )
 
 func TestEmitJSONLValidatesAndConsumesEvents(t *testing.T) {
-	input := `{"event":"scan.start","component":"qureddy","outcome":"ok","attributes":{"target":"example.test"}}
-{"event":"scan.finish","component":"qureddy","outcome":"error"}
+	input := `{"schema":"bqp.run.v1","event":"scan.start","component":"qureddy","outcome":"ok","attributes":{"target":"example.test"}}
+{"schema":"bqp.run.v1","event":"scan.finish","component":"qureddy","outcome":"error"}
 `
 
 	if err := emitJSONL(t.Context(), strings.NewReader(input), sdk.NewClient(nil)); err != nil {
@@ -21,7 +21,7 @@ func TestEmitJSONLValidatesAndConsumesEvents(t *testing.T) {
 }
 
 func TestEmitJSONLRejectsUnknownFields(t *testing.T) {
-	input := `{"event":"scan.start","component":"qureddy","outcome":"ok","secret":"no"}`
+	input := `{"schema":"bqp.run.v1","event":"scan.start","component":"qureddy","outcome":"ok","secret":"no"}`
 
 	if err := emitJSONL(t.Context(), strings.NewReader(input), sdk.NewClient(nil)); err == nil {
 		t.Fatal("emitJSONL() accepted an unknown field")
@@ -29,7 +29,7 @@ func TestEmitJSONLRejectsUnknownFields(t *testing.T) {
 }
 
 func TestEmitJSONLRejectsInvalidEvent(t *testing.T) {
-	input := `{"event":"scan.start","component":"qureddy","outcome":"bad"}`
+	input := `{"schema":"bqp.run.v1","event":"scan.start","component":"qureddy","outcome":"bad"}`
 
 	if err := emitJSONL(t.Context(), strings.NewReader(input), sdk.NewClient(nil)); err == nil {
 		t.Fatal("emitJSONL() accepted an invalid outcome")

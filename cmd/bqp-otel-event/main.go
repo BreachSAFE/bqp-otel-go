@@ -59,6 +59,9 @@ func emitJSONL(ctx context.Context, input io.Reader, client sdk.Client) error {
 		if err := decoder.Decode(&event); err != nil {
 			return fmt.Errorf("line %d: decode: %w", line, err)
 		}
+		if event.Schema != sdk.Schema {
+			return fmt.Errorf("line %d: schema must be %q", line, sdk.Schema)
+		}
 		if err := client.Emit(ctx, event); err != nil {
 			return fmt.Errorf("line %d: %w", line, err)
 		}
