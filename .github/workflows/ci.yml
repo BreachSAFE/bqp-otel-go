@@ -1,0 +1,41 @@
+# SPDX-FileCopyrightText: 2026 BreachSAFE <https://www.breachsafe.io>
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GOLDEN_GO_IMAGE: ghcr.io/paul007ex/breachsafe-golden-go@sha256:52fe7f2d9e0bc0f2e6be77c06da81eb3f0fe735bc93a930baf78b7c1fdc8d7b5
+  OCB_VERSION: v0.159.0
+
+jobs:
+  config:
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ env.GOLDEN_GO_IMAGE }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - name: Golden toolchain smoke test
+        run: golden-go-doctor
+      - name: Build pinned collector distribution
+        run: |
+          go install go.opentelemetry.io/collector/cmd/builder@${OCB_VERSION}
+          builder --config otelcol-builder.yaml
+          test -x dist/bqp-otel
+      - name: Verify generated binary
+        run: dist/bqp-otel components | head -80

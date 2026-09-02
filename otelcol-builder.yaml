@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 BreachSAFE <https://www.breachsafe.io>
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+dist:
+  name: bqp-otel
+  description: BreachSAFE Quantum Platform OpenTelemetry Collector
+  module: github.com/BreachSAFE/bqp-otel-go
+  output_path: ./dist
+  otelcol_version: 0.159.0
+  go: 1.26.6
+receivers:
+  - gomod: go.opentelemetry.io/collector/receiver/otlpreceiver v0.159.0
+processors:
+  - gomod: go.opentelemetry.io/collector/processor/batchprocessor v0.159.0
+  - gomod: go.opentelemetry.io/collector/processor/memorylimiterprocessor v0.159.0
+exporters:
+  - gomod: go.opentelemetry.io/collector/exporter/debugexporter v0.159.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/exporter/fileexporter v0.159.0
+extensions:
+  - gomod: go.opentelemetry.io/collector/extension/zpagesextension v0.159.0

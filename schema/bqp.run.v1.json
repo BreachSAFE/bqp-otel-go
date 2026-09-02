@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://breachsafe.io/schemas/bqp.run.v1.json",
+  "title": "BQP runtime event envelope",
+  "type": "object",
+  "required": ["schema", "event", "component", "outcome"],
+  "properties": {
+    "schema": {"const": "bqp.run.v1"},
+    "event": {"type": "string", "maxLength": 128},
+    "component": {"type": "string", "maxLength": 128},
+    "outcome": {"enum": ["ok", "error", "timeout"]},
+    "run_id": {"type": "string", "maxLength": 128},
+    "session_id": {"type": "string", "maxLength": 128},
+    "duration_ms": {"type": ["integer", "null"], "minimum": 0},
+    "attributes": {"type": "object", "maxProperties": 32}
+  },
+  "additionalProperties": true
+}

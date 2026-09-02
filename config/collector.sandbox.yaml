@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: 2026 BreachSAFE <https://www.breachsafe.io>
+# SPDX-License-Identifier: Apache-2.0
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 128
+    spike_limit_mib: 32
+  batch:
+exporters:
+  debug:
+    verbosity: basic
+  file:
+    path: /var/lib/bqp-otel/events.jsonl
+extensions:
+  zpages:
+service:
+  extensions: [zpages]
+  pipelines:
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [debug, file]
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [debug, file]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [debug, file]

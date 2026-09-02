@@ -1,0 +1,41 @@
+<!-- SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0 -->
+
+# bqp-otel-go
+
+## Contents
+
+1. [Purpose](#purpose)
+2. [Architecture](#architecture)
+3. [Current status](#current-status)
+4. [Repository rules](#repository-rules)
+
+## Purpose
+
+`bqp-otel-go` is the BreachSAFE Quantum Platform OpenTelemetry Collector distribution.
+It is built with the pinned OpenTelemetry Collector Builder (OCB) and composes stock
+receivers, processors, and exporters before adding any BQP-specific component.
+
+## Architecture
+
+```text
+BQP producers (QuReddy, QuReddy-App, evidence-go, PDF-go)
+                     │ bqp.run.v1 over OTLP
+                     ▼
+              bqp-otel-go
+       OCB-built Collector binary
+         validate → bound → persist → export
+```
+
+Products own lifecycle context. This repository owns telemetry transport and export.
+The authoritative plan is [`docs/architecture/0001-collector-distribution.md`](docs/architecture/0001-collector-distribution.md).
+
+## Current status
+
+The repository is in scaffold/design phase. No custom processor or exporter is shipped.
+The first implementation must use pinned stock OTel components and prove a real
+producer-to-collector path before central redaction or backend-specific code is added.
+
+## Repository rules
+
+Read [`AGENTS.md`](AGENTS.md) and [`CLAUDE.md`](CLAUDE.md) before changing this repository.
+Use the BreachSAFE golden Go image; do not copy its Dockerfile into this repository.
