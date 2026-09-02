@@ -31,7 +31,7 @@ The active milestone is [0.1.0 — BQP OTel Collector distribution](https://gith
 | State | Scope |
 |---|---|
 | ✅ | Repository scope, ADR, draft config, schema boundary, pinned CI contract, Go SDK foundation |
-| ⏳ | Generated collector binary and runtime image |
+| 🟡 | Generated collector binary, Go SDK foundation, and SDK→Collector integration gate wired |
 | ⏳ | Producer integrations and backend profiles |
 | ⏳ | Real multi-process conformance, SBOM, signing, and release |
 
