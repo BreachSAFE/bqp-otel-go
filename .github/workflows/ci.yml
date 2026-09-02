@@ -64,7 +64,9 @@ jobs:
           go install go.opentelemetry.io/collector/cmd/builder@${OCB_VERSION}
           export GOFLAGS="${GOFLAGS} -buildvcs=false"
           builder --config otelcol-builder.yaml
+          CGO_ENABLED=0 go build -trimpath -o dist/bqp-otel-healthcheck ./cmd/bqp-otel-healthcheck
           test -x dist/bqp-otel
+          test -x dist/bqp-otel-healthcheck
       - name: Verify generated binary
         run: dist/bqp-otel components | head -80
       - name: Real SDK to Collector integration
@@ -73,9 +75,17 @@ jobs:
           dist/bqp-otel --config config/collector.sandbox.yaml >/tmp/bqp-otel.log 2>&1 &
           collector_pid=$!
           trap 'kill "${collector_pid}" 2>/dev/null || true' EXIT
-          sleep 2
+          for attempt in $(seq 1 10); do
+            dist/bqp-otel-healthcheck && break
+            test "${attempt}" -lt 10 || exit 1
+            sleep 1
+          done
           go test -tags integration -count=1 ./integration
           sleep 2
           test -s /var/lib/bqp-otel/events.jsonl
           grep -q 'integration.probe' /var/lib/bqp-otel/events.jsonl
           ! grep -q 'must-not-persist' /var/lib/bqp-otel/events.jsonl
+          ! grep -q 'must-not-persist-api-token' /var/lib/bqp-otel/events.jsonl
+          ! grep -q 'must-not-persist-authorization' /var/lib/bqp-otel/events.jsonl
+          ! grep -q 'must-not-persist-password' /var/lib/bqp-otel/events.jsonl
+          ! grep -q 'must-not-persist-private-key' /var/lib/bqp-otel/events.jsonl

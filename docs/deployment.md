@@ -75,5 +75,9 @@ The profile initializes the named volume with the collector's non-root UID, then
 receivers to loopback, drops all Linux capabilities, enables
 `no-new-privileges`, uses a read-only root filesystem, and grants write access only to
 the named `bqp-otel-events` volume. `/tmp` is an explicitly bounded memory filesystem.
+The Collector health endpoint is available at `http://127.0.0.1:13133/`; its image
+healthcheck probes this endpoint rather than merely parsing the configuration. File
+persistence rotates at 10 MiB per active file, retains at most five backups, and removes
+backups older than seven days (a nominal 60 MiB ceiling including the active file).
 The image is built from the pinned golden-Go builder and pinned distroless runtime; the
 Compose tag is development-only until the release workflow publishes a signed digest.

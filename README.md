@@ -36,10 +36,11 @@ The authoritative plan is [`docs/architecture/0001-collector-distribution.md`](d
 
 ## Current status
 
-The initial architecture checkpoint is on `main` (`45aa9f5`). No custom processor or
-exporter is shipped. The first implementation must use pinned stock OTel components and
-prove a real producer-to-collector path before central redaction or backend-specific code
-is added.
+The initial architecture checkpoint is on `main` (`45aa9f5`). The sandbox distribution
+uses only pinned stock OTel components, including defense-in-depth redaction, bounded file
+rotation, and a live health endpoint. A real producer-to-collector path is exercised in CI;
+central redaction remains configuration-owned and no custom Collector processor or
+exporter is shipped.
 
 ## Delivery plan
 

@@ -36,7 +36,13 @@ func TestSDKEmitsToRunningCollector(t *testing.T) {
 	}
 	tracer := provider.Tracer("integration/raw")
 	_, span := tracer.Start(ctx, "integration.redaction")
-	span.SetAttributes(attribute.String("token", "must-not-persist"))
+	span.SetAttributes(
+		attribute.String("token", "must-not-persist"),
+		attribute.String("api_token", "must-not-persist-api-token"),
+		attribute.String("Authorization", "must-not-persist-authorization"),
+		attribute.String("db_password", "must-not-persist-password"),
+		attribute.String("private-key", "must-not-persist-private-key"),
+	)
 	span.End()
 	if err := shutdown(ctx); err != nil {
 		t.Fatalf("provider shutdown: %v", err)
