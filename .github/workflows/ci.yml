@@ -62,6 +62,7 @@ jobs:
       - name: Build pinned collector distribution
         run: |
           go install go.opentelemetry.io/collector/cmd/builder@${OCB_VERSION}
+          export GOFLAGS="${GOFLAGS} -buildvcs=false"
           builder --config otelcol-builder.yaml
           test -x dist/bqp-otel
       - name: Verify generated binary
