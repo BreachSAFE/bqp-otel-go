@@ -13,6 +13,26 @@ processors:
     limit_mib: 128
     spike_limit_mib: 32
   batch:
+  attributes/redact_sensitive:
+    actions:
+      - key: token
+        action: delete
+      - key: secret
+        action: delete
+      - key: password
+        action: delete
+      - key: authorization
+        action: delete
+      - key: oauth
+        action: delete
+      - key: private_key
+        action: delete
+      - key: terminal
+        action: delete
+      - key: stdout
+        action: delete
+      - key: stderr
+        action: delete
 exporters:
   debug:
     verbosity: basic
@@ -25,13 +45,13 @@ service:
   pipelines:
     logs:
       receivers: [otlp]
-      processors: [memory_limiter, batch]
+      processors: [memory_limiter, attributes/redact_sensitive, batch]
       exporters: [debug, file]
     traces:
       receivers: [otlp]
-      processors: [memory_limiter, batch]
+      processors: [memory_limiter, attributes/redact_sensitive, batch]
       exporters: [debug, file]
     metrics:
       receivers: [otlp]
-      processors: [memory_limiter, batch]
+      processors: [memory_limiter, attributes/redact_sensitive, batch]
       exporters: [debug, file]

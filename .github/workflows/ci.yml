@@ -78,3 +78,4 @@ jobs:
           sleep 2
           test -s /var/lib/bqp-otel/events.jsonl
           grep -q 'integration.probe' /var/lib/bqp-otel/events.jsonl
+          ! grep -q 'must-not-persist' /var/lib/bqp-otel/events.jsonl

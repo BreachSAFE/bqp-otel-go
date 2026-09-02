@@ -7,16 +7,22 @@ package integration
 
 import (
 	"context"
+	"os"
 	"testing"
 	"time"
 
 	"github.com/BreachSAFE/bqp-otel-go/sdk"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 func TestSDKEmitsToRunningCollector(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	provider, shutdown, err := sdk.NewOTLPProvider(ctx, "127.0.0.1:4317", "bqp-integration", "test", true)
+	endpoint := os.Getenv("BQP_OTEL_ENDPOINT")
+	if endpoint == "" {
+		endpoint = "127.0.0.1:4317"
+	}
+	provider, shutdown, err := sdk.NewOTLPProvider(ctx, endpoint, "bqp-integration", "test", true)
 	if err != nil {
 		t.Fatalf("NewOTLPProvider() error = %v", err)
 	}
@@ -28,6 +34,10 @@ func TestSDKEmitsToRunningCollector(t *testing.T) {
 	if err := client.Emit(ctx, event); err != nil {
 		t.Fatalf("Emit() error = %v", err)
 	}
+	tracer := provider.Tracer("integration/raw")
+	_, span := tracer.Start(ctx, "integration.redaction")
+	span.SetAttributes(attribute.String("token", "must-not-persist"))
+	span.End()
 	if err := shutdown(ctx); err != nil {
 		t.Fatalf("provider shutdown: %v", err)
 	}

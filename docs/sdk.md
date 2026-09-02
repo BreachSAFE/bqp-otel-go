@@ -8,7 +8,8 @@
 1. [Purpose](#purpose)
 2. [Ownership](#ownership)
 3. [Emission contract](#emission-contract)
-4. [Non-goals](#non-goals)
+4. [Redaction boundary](#redaction-boundary)
+5. [Non-goals](#non-goals)
 
 ## Purpose
 
@@ -34,6 +35,16 @@ boundary, enforce event and attribute limits before encoding, and expose deliver
 through an observable diagnostic path without making telemetry availability a product
 success criterion. OTLP endpoint, timeout, and enablement are explicit configuration;
 disabled-by-default remains the safe product default until a producer opts in.
+
+## Redaction boundary
+
+The SDK rejects sensitive attribute keys before export. The sandbox Collector adds a
+defense-in-depth stock `attributes` processor that deletes known credential, OAuth,
+terminal, and stream keys from spans received from any producer. A real integration test
+sends a sensitive attribute through the generated Collector and asserts that the persisted
+JSONL artifact does not contain its value. This is a deny-list of field names, not a claim
+that arbitrary payload text can be safely scrubbed; producers must never put secrets or raw
+output in telemetry.
 
 ## Non-goals
 
