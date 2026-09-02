@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2026 BreachSAFE <https://www.breachsafe.io>
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
+//go:build integration
+
 package integration
 
 import (
