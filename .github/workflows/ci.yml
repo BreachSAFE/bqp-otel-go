@@ -73,9 +73,13 @@ jobs:
           dist/bqp-otel --config config/collector.sandbox.yaml >/tmp/bqp-otel.log 2>&1 &
           collector_pid=$!
           trap 'kill "${collector_pid}" 2>/dev/null || true' EXIT
-          sleep 2
+          curl --fail --silent --show-error --retry 10 --retry-delay 1 http://127.0.0.1:13133/
           go test -tags integration -count=1 ./integration
           sleep 2
           test -s /var/lib/bqp-otel/events.jsonl
           grep -q 'integration.probe' /var/lib/bqp-otel/events.jsonl
           ! grep -q 'must-not-persist' /var/lib/bqp-otel/events.jsonl
+          ! grep -q 'must-not-persist-api-token' /var/lib/bqp-otel/events.jsonl
+          ! grep -q 'must-not-persist-authorization' /var/lib/bqp-otel/events.jsonl
+          ! grep -q 'must-not-persist-password' /var/lib/bqp-otel/events.jsonl
+          ! grep -q 'must-not-persist-private-key' /var/lib/bqp-otel/events.jsonl

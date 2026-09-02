@@ -39,12 +39,12 @@ disabled-by-default remains the safe product default until a producer opts in.
 ## Redaction boundary
 
 The SDK rejects sensitive attribute keys before export. The sandbox Collector adds a
-defense-in-depth stock `attributes` processor that deletes known credential, OAuth,
-terminal, and stream keys from spans received from any producer. A real integration test
-sends a sensitive attribute through the generated Collector and asserts that the persisted
-JSONL artifact does not contain its value. This is a deny-list of field names, not a claim
-that arbitrary payload text can be safely scrubbed; producers must never put secrets or raw
-output in telemetry.
+defense-in-depth stock `redaction` processor that masks credential, OAuth, terminal, and
+stream key variants from telemetry received from any producer. A real integration test sends
+literal and variant sensitive keys through the generated Collector and asserts that the
+persisted JSONL artifact does not contain their values. This is a deny-list of field names,
+not a claim that arbitrary payload text can be safely scrubbed; producers must never put
+secrets or raw output in telemetry.
 
 ## Non-goals
 

@@ -13,45 +13,49 @@ processors:
     limit_mib: 128
     spike_limit_mib: 32
   batch:
-  attributes/redact_sensitive:
-    actions:
-      - key: token
-        action: delete
-      - key: secret
-        action: delete
-      - key: password
-        action: delete
-      - key: authorization
-        action: delete
-      - key: oauth
-        action: delete
-      - key: private_key
-        action: delete
-      - key: terminal
-        action: delete
-      - key: stdout
-        action: delete
-      - key: stderr
-        action: delete
+  redaction/bqp:
+    # Defense in depth for raw producers: match normalized variants, not only exact keys.
+    allow_all_keys: true
+    redact_all_types: true
+    blocked_key_patterns:
+      - (?i).*token.*
+      - (?i).*secret.*
+      - (?i).*password.*
+      - (?i).*authorization.*
+      - (?i).*oauth.*
+      - (?i).*private[_\.-]?key.*
+      - (?i).*terminal.*
+      - (?i).*stdout.*
+      - (?i).*stderr.*
+    summary: silent
 exporters:
   debug:
     verbosity: basic
   file:
     path: /var/lib/bqp-otel/events.jsonl
+    rotation:
+      max_megabytes: 10
+      max_backups: 5
+      max_days: 7
 extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
   zpages:
 service:
-  extensions: [zpages]
+  extensions: [health_check, zpages]
+  telemetry:
+    metrics:
+      level: normal
   pipelines:
     logs:
       receivers: [otlp]
-      processors: [memory_limiter, attributes/redact_sensitive, batch]
+      processors: [memory_limiter, redaction/bqp, batch]
       exporters: [debug, file]
     traces:
       receivers: [otlp]
-      processors: [memory_limiter, attributes/redact_sensitive, batch]
+      processors: [memory_limiter, redaction/bqp, batch]
       exporters: [debug, file]
     metrics:
       receivers: [otlp]
-      processors: [memory_limiter, attributes/redact_sensitive, batch]
+      processors: [memory_limiter, redaction/bqp, batch]
       exporters: [debug, file]
