@@ -1,0 +1,10 @@
+{
+  "schema": "bqp.run.v1",
+  "event": "scan.start",
+  "component": "qureddy",
+  "outcome": "ok",
+  "run_id": "run-123",
+  "session_id": "session-456",
+  "duration_ms": 4,
+  "attributes": {"target.kind": "tls"}
+}
