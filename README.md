@@ -7,7 +7,8 @@
 1. [Purpose](#purpose)
 2. [Architecture](#architecture)
 3. [Current status](#current-status)
-4. [Repository rules](#repository-rules)
+4. [Delivery plan](#delivery-plan)
+5. [Repository rules](#repository-rules)
 
 ## Purpose
 
@@ -31,9 +32,17 @@ The authoritative plan is [`docs/architecture/0001-collector-distribution.md`](d
 
 ## Current status
 
-The repository is in scaffold/design phase. No custom processor or exporter is shipped.
-The first implementation must use pinned stock OTel components and prove a real
-producer-to-collector path before central redaction or backend-specific code is added.
+The initial architecture checkpoint is on `main` (`45aa9f5`). No custom processor or
+exporter is shipped. The first implementation must use pinned stock OTel components and
+prove a real producer-to-collector path before central redaction or backend-specific code
+is added.
+
+## Delivery plan
+
+The [0.1.0 milestone](https://github.com/BreachSAFE/bqp-otel-go/milestone/1) tracks the
+work in dependency order: reproducible distribution, schema fixtures, hardened sandbox,
+producer integrations, backend profiles, then real conformance and release gates. The
+issue tracker is the execution record; the ADR is the architecture record.
 
 ## Repository rules
 
